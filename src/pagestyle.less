@@ -1,0 +1,330 @@
+@import "variables";
+
+/* global reset */
+* {padding:0;margin:0;}
+html, body, div, span, applet, object, iframe,h1, h2, h3, h4, h5, h6, p, blockquote, pre,a, abbr, acronym, address, big, cite, code,del, dfn, em, font, img, ins, kbd, q, s, samp,small, strike, strong, sub, sup, tt, var,b, u, i, center,dl, dt, dd, ol, ul, li,fieldset, form, label, legend,table, caption, tbody, tfoot, thead, tr, th, td {margin: 0;padding: 0;border: 0;outline: 0;font-size: 100%;vertical-align: baseline;}
+body {line-height: 1;background-color:#000;font:14px Arial, Helvetica, sans-serif;}
+ol, ul, menu {list-style: none;}
+blockquote, q {quotes: none;}
+blockquote:before, blockquote:after,q:before, q:after {content: '';content: none;}
+ins {text-decoration: none;}
+del {text-decoration: line-through;}
+table {border-collapse: collapse;border-spacing: 0;}
+/* global reset ends here */
+
+/*==============================================================================
+        General style
+==============================================================================*/
+body {
+    background: @mainBackgroundColor;
+    font: 200 @mainTextSize @mainFontFamily, Arial;
+    color: @mainTextColor;
+    .extra-light;
+    line-height: 1.5;
+}
+a {
+    color: @linkColor;
+    text-decoration: none;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+sup,sub {
+    height: 0;
+    line-height: 1;
+    position: relative;
+    vertical-align: baseline;
+    font-size: @mainTextSize*0.7;
+}
+sup {
+    bottom: 1ex;
+}
+sub {
+    top: .5ex;
+}
+strong{
+    font-weight: 600;
+}
+p {
+    margin:0 0 20px;
+}
+hr{
+    border-style: solid;
+    border-color: @lineColor;
+    border-width: 1px 0 0;
+    height: 1px;
+    background: none;
+    padding: 0 0 15px;
+    overflow: hidden;
+}
+img{
+    max-width: 100%;
+    height: auto;
+}
+/*==============================================================================
+        List style
+==============================================================================*/
+ul, ol  {
+    margin:0 0 20px 20px;
+    &:only-child  {
+        margin-bottom:0;
+    }
+    &.list-no-style {
+        margin: 0;
+        li{
+            list-style: none outside none;
+        }
+    }
+}
+ul > li {
+    list-style: none outside none;
+    &:before{
+        content: '';
+        display: inline-block;
+        vertical-align: top;
+        border: none;
+        margin: 7px 11px 0 -19px;
+        background: url("images/list-image.png") no-repeat 0 0;
+        width: 6px;
+        height:12px;
+        @media @highdensity{
+            background: url("images/list-image@2x.png") no-repeat 0 0;
+            .background-size(3px 6px);
+        }
+    }
+    .msie8 &, .msie7 & {
+        background: url("images/list-image.png") no-repeat 0 7px;
+        padding-left: 19px;
+    }
+}
+ol > li {
+    list-style: decimal outside;
+}
+ul.list-no-style,
+ol.list-no-style {
+    margin: 0;
+}
+/*==============================================================================
+        Heading style
+==============================================================================*/
+h1, h2, h3, h4{
+    color: @headingsTextColor;
+}
+h1 {
+    font-weight:200;
+    font-size: @mainTextSize*1.777; //32
+    margin-bottom: 20px;
+    .extra-light;
+}
+h2{
+    font-weight:200;
+    font-size: @mainTextSize*1.333; //24
+    margin-bottom: 7px;
+    .extra-light;
+}
+h3 {
+    font-weight:600;
+    font-size: @mainTextSize*1.222; // 22
+    margin-bottom: 7px;
+    .semi-bold;
+}
+h4 {
+    font-weight:400;
+    font-size: @mainTextSize*1.111; //20
+    margin-bottom: 7px;
+    .regular;
+}
+/*==============================================================================
+        Table style
+==============================================================================*/
+table {
+    margin-bottom: 20px;
+    border: 1px solid @tableBorderColor;
+    thead {
+        background: @tableSecondBack;
+        text-align: left;
+
+        border-style: solid;
+        border-color: @tableBorderColor;
+        border-width: 1px 1px 5px;
+        th {
+            padding: 12px 9px 10px;
+            font-weight: 600;
+        }
+    }
+    td {
+        border: 1px solid @tableBorderColor;
+        padding: 12px 9px 10px;
+        vertical-align: top;
+        &.td-vertical-middle {
+            vertical-align: middle;
+        }
+        &.td-vertical-bottom {
+            vertical-align: bottom;
+        }
+    }
+    .even{
+        background: @tableSecondBack;
+    }
+    &.table-no-style {
+        border: none;
+        margin: 0;
+        td{
+            padding: 0;
+            border: none;
+        }
+    }
+    &.table-border-horizontal {
+        border-color: transparent;
+        td {
+            border-left-color: transparent;
+            border-right-color: transparent;
+        }
+    }
+    &.table-without-border {
+        border-color: transparent;
+        margin: 0;
+        td{
+            border-color: transparent;
+            &:first-child{
+                padding-left: 0
+            }
+        }
+    }
+}
+/*==============================================================================
+        FLoats style
+==============================================================================*/
+.float_left {
+    float: left;
+}
+.float_right {
+    float: right;
+}
+img.float_left {
+    float: left;
+    margin: 0 22px 0 0;
+}
+img.float_right {
+    float: right;
+    margin: 0 0 0 22px;
+}
+.text-center{
+    text-align: center;
+}
+/*==============================================================================
+        Form style
+==============================================================================*/
+form {
+    margin-bottom: 15px;
+}
+input{
+    padding: 0 10px;
+    border-width: 0 0 4px;
+    border-style: solid;
+    border-color: @inputBorderColor;
+    height: 41px;
+    .box-sizing(border-box);
+    color: #5e5e5e;
+    display: inline-block;
+    vertical-align: middle;
+    .ie7-inline-block;
+}
+input[type="submit"], input[type="reset"], input[type="button"]{
+    filter:chroma(color=#000000);
+    outline: none;
+}
+input[type=submit], .button {
+    .buttonStyle();
+    &.bigger-button{
+        padding: 10px 20px;
+    }
+}
+.button-right-arrow {
+    .buttonStyle(1px 0 1px 1px, 5px 10px, 5px 0 0 5px);
+    position: relative;
+    .no-backgroundsize & {
+        height: 19px;
+    }
+        &:after{
+            content: '';
+            position: absolute;
+            right: -13.5px;
+            height: 108%;
+            width: 15px;
+            top: -1px;
+            background-repeat: no-repeat;
+            background-image: url("images/arrow-right@2x.png");
+            .background-size(14px 100%);
+            .no-backgroundsize &{
+                content: url("images/arrow-right-small.png");
+                background: transparent;
+                height:auto;
+                top: -1px;
+            }
+        }
+    &:hover:after{
+        background-image: url("images/arrow-right-hover@2x.png");
+        .no-backgroundsize &{
+            content: url("images/arrow-right-small-hover.png");
+            background: transparent;
+        }
+    }
+}
+.button-left-arrow{
+    .buttonStyle(1px 1px 1px 0, 5px 10px, 0 5px 5px 0);
+    position: relative;
+    .no-backgroundsize & {
+        height: 19px;
+    }
+        &:before{
+            content: '';
+            position: absolute;
+            left: -12px;
+            height: 105%;
+            width: 15px;
+            top: -1px;
+            background-repeat: no-repeat;
+            background-image: url("images/arrow-left@2x.png");
+            .background-size(14px 100%);
+            .no-backgroundsize &{
+                content: url("images/arrow-left-small.png");
+                background: transparent;
+                height:auto;
+                top: -1px;
+            }
+        }
+    &:hover:before{
+        background-image: url("images/arrow-left-hover@2x.png");
+        .no-backgroundsize &{
+            content: url("images/arrow-left-small-hover.png");
+            background: transparent;
+        }
+    }
+}
+.bigger-button{
+    .buttonStyle(1px, 10px 20px, 5px);
+    height: auto;
+}
+
+a[class*="button"] {
+    display: inline-block;
+    text-decoration: none;
+    &:hover {
+        color: #fff;
+    }
+}
+textarea{
+    padding: 0 10px;
+    border-width: 0 0 4px;
+    border-style: solid;
+    border-color: @inputBorderColor;
+    .box-sizing(border-box);
+    color: #5e5e5e;
+    display: inline-block;
+    vertical-align: middle;
+    .ie7-inline-block;
+}
+/*==============================================================================
+        Other style
+==============================================================================*/

@@ -1,0 +1,127 @@
+@import "../variables";
+
+/*==============================================================================
+            Section title
+==============================================================================*/
+.section-title{
+    background: url("../images/back-imagine@2x.jpg") no-repeat center center;
+    .background-size(100% auto);
+    text-align: center;
+    color: #ffffff;
+    height: 231px;
+    padding-top: 88px;
+    padding-bottom: 30px;
+    .box-sizing(border-box);
+    font: 200 30px @mainFontFamily;
+    width: 100%;
+    @media @more479less599 {
+        padding-top: 68px;
+        height: 221px;
+        .background-size(100% 221px);
+    }
+    @media @less479 {
+        padding-top: 28px;
+        height: 221px;
+        .background-size(100% 221px);
+    }
+    h1{
+        font: 300 60px @mainFontFamily;
+        color: #ffffff;
+    }
+    &.eccomerc{
+        background-image: url("../images/wwd/back-ecommerc.jpg");
+    }
+}
+/*==============================================================================
+            Section Further reading
+==============================================================================*/
+.further-reading{
+    border-top: 1px solid @lineColor;
+    padding: 40px 0 30px;
+    margin-top: 50px;
+    .title{
+        float: left;
+        width: 20%;
+        @media (max-width: 767px){
+            width: 100%;
+        }
+    }
+    ul{
+        overflow: hidden;
+        margin: 0;
+        li{
+            float: left;
+            width: 25%;
+            .box-sizing(border-box);
+            padding-right: 25px;
+            &:first-child{
+                margin-left: 20px;
+                width: 22%;
+            }
+            &:last-child{
+                padding-right:0;
+            }
+        }
+    }
+}
+
+.build-ecommerce{
+    padding-bottom: 20px;
+    .build-ecommerce-table{
+        margin-bottom: 45px;
+        td{
+            vertical-align: middle;
+            font-size: 24px;
+            padding-top: 0;
+            padding-bottom: 0;
+            img{
+                display: inline-block;
+            }
+        }
+    }
+}
+
+.ecommerce-quote{
+    background: #f7f4ef;
+    padding: 72px 0 68px;
+    .container{
+        width: 90%;
+        max-width: 806px;
+        margin: 0 auto;
+        border-width: 4px 0;
+        border-style: solid;
+        border-color: #d3ccc5 transparent;
+        padding: 28px 38.5px;
+        .box-sizing(border-box);
+        background: #fff;
+        font-weight: 400;
+        .regular;
+        h2{
+            font-weight: 400;
+            .regular;
+        }
+        li{
+            margin-bottom: 10px;
+        }
+        .avatar{
+            float: left;
+            margin: 7px 19px 0 0;
+        }
+    }
+}
+
+.ecommerce-list{
+    article{
+        border-top: 1px solid @lineColor;
+        padding: 37.5px 0;
+        &:first-child{
+            border: none;
+        }
+        .float_left{
+            margin-right: 50px;
+        }
+        .float_right{
+            margin-left: 50px;
+        }
+    }
+}

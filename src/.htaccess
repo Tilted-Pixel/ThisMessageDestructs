@@ -1,0 +1,2 @@
+RewriteEngine on
+RewriteRule ^m/([a-zA-z0-9\-]*)$ /retrieve.php?msg=$1 [QSA]

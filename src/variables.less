@@ -1,0 +1,270 @@
+@mainTextColor:                 #261f19;
+@mainBackgroundColor:           #ffffff;
+@linkColor:                     #f67f21;
+@footerBottomBack:              #2f2720;
+@footerBottomColor:             #625a53;
+@footerFormColor:               #b2b2b2;
+@lineColor:                     #f3e7df;
+@inputBorderColor:              #d3ccc5;
+@buttonBackTop:                 #f79d37;
+@buttonBackBottom:              #fb7f00;
+@buttonTextShadow:              #ea610a;
+@buttonBorder:                  #de6a00;
+@headingsTextColor:             #232323;
+@tableBorderColor:              #d3ccc5;
+@tableSecondBack:               #faf6f1;
+
+
+@mainTextSize:                  18px;
+@textSizeSmaller:               @mainTextSize*0.8888; //16
+@footerTextSize:                @textSizeSmaller;
+@buttonTextSize:                @textSizeSmaller;
+@footerHeadingSize:             25px;
+@footerSubscribeSmallSize:      12px;
+@footerSubscribeButtonSize:     12px;
+@footerPhoneSize:               26px;
+
+@mainFontFamily:                'Source Sans Pro';
+@buttonFontFamily:              'Ubuntu';
+
+@footerFullHeight:              266px;
+@footerBottomHeight:            58px;
+@footerFormHeight:              29px;
+@footerDeviceHeight:            @footerFullHeight+143;
+@containerPadding:              10px;
+@containerPaddingBig:           30px;
+
+@containerMaxWidth:             959px;
+@containerMinWidth:             320px-@containerPadding*4;
+@mainContentMaxWidth:           679px;
+@mainContentMinWidth:           @containerMinWidth;
+@asideWidth:                    218px;
+
+@headerHeight:                  64px;
+
+
+
+.ie7-inline-block() {
+    *display: inline;
+    *zoom: 1;
+}
+.border-radius(@radius) {
+    -webkit-border-radius: @radius;
+    -moz-border-radius: @radius;
+    border-radius: @radius;
+}
+.box-shadow(@shadow) {
+    -webkit-box-shadow: @shadow;
+    -moz-box-shadow: @shadow;
+    box-shadow: @shadow;
+}
+.box-shadow2(@shadow1,@shadow2) {
+    -webkit-box-shadow: @shadow1,@shadow2;
+    -moz-box-shadow: @shadow1,@shadow2;
+    box-shadow: @shadow1,@shadow2;
+}
+.text-shadow(@shadow) {
+    -text-box-shadow: @shadow;
+    -text-box-shadow: @shadow;
+    text-shadow: @shadow;
+}
+.background-size(@size) {
+    -webkit-background-size: @size;
+    -moz-background-size: @size;
+    -o-background-size: @size;
+    -ms-background-size: @size;
+    background-size: @size;
+}
+.transition(@transition) {
+    -webkit-transition: @transition;
+    -moz-transition: @transition;
+    -o-transition: @transition;
+    transition: @transition;
+}
+.transition2(@transition1,@transition2) {
+    -webkit-transition: @transition1,@transition2;
+    -moz-transition: @transition1,@transition2;
+    -o-transition: @transition1,@transition2;
+    transition: @transition1,@transition2;
+}
+.rotate(@degrees) {
+    -webkit-transform: rotate(@degrees);
+    -moz-transform: rotate(@degrees);
+    -ms-transform: rotate(@degrees);
+    -o-transform: rotate(@degrees);
+    transform: rotate(@degrees);
+}
+.box-sizing(@boxmodel) {
+    -webkit-box-sizing: @boxmodel;
+    -moz-box-sizing: @boxmodel;
+    box-sizing: @boxmodel;
+}
+.opacity(@opacity) {
+    opacity: @opacity / 100;
+    filter: ~"alpha(opacity=@{opacity})";
+}
+.text-overflow() {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+// CSS3 Content Columns
+.content-columns(@columnCount, @columnGap) {
+    -webkit-column-count: @columnCount;
+    -moz-column-count: @columnCount;
+    column-count: @columnCount;
+    -webkit-column-gap: @columnGap;
+    -moz-column-gap: @columnGap;
+    column-gap: @columnGap;
+}
+// Gradient Bar Colors for buttons and alerts
+.buttonStyle(@border-width: 1px, @padding: 5px 10px, @radius: 5px) {
+    color: #ffffff;
+    text-shadow: 0 -1px 0 @buttonTextShadow;
+    #gradient > .vertical(@buttonBackTop, @buttonBackBottom);
+    border-width: 1px;
+    border-style: solid;
+    border-color: @buttonBorder;
+    cursor: pointer;
+    padding: @padding;
+    .box-shadow2(0 0 1px #ffffff inset, 0 0 2px #444444);
+    font: 600 @buttonTextSize @buttonFontFamily;
+    .border-radius(@radius);
+    &:hover{
+        #gradient > .vertical(@buttonBackBottom, @buttonBackTop);
+    }
+}
+// Gradient Bar Colors for buttons and alerts
+.gradientBar(@primaryColor, @secondaryColor, @textColor: #fff, @textShadow: 0 -1px 0 rgba(0,0,0,.25)) {
+    color: @textColor;
+    text-shadow: @textShadow;
+    #gradient > .vertical(@primaryColor, @secondaryColor);
+    border-color: @secondaryColor @secondaryColor darken(@secondaryColor, 15%);
+    border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) fadein(rgba(0,0,0,.1), 15%);
+}
+
+// Gradients
+#gradient {
+    .horizontal(@startColor: #555, @endColor: #333) {
+        background-color: @endColor;
+        background-image: -moz-linear-gradient(left, @startColor, @endColor); // FF 3.6+
+        background-image: -webkit-gradient(linear, 0 0, 100% 0, from(@startColor), to(@endColor)); // Safari 4+, Chrome 2+
+        background-image: -webkit-linear-gradient(left, @startColor, @endColor); // Safari 5.1+, Chrome 10+
+        background-image: -o-linear-gradient(left, @startColor, @endColor); // Opera 11.10
+        background-image: linear-gradient(to right, @startColor, @endColor); // Standard, IE10
+        background-repeat: repeat-x;
+//        filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=1)",argb(@startColor),argb(@endColor))); // IE9 and down
+    }
+    .vertical(@startColor: #555, @endColor: #333) {
+        background-color: mix(@startColor, @endColor, 60%);
+        background-image: -moz-linear-gradient(top, @startColor, @endColor);
+        background-image: -ms-linear-gradient(top, @startColor, @endColor);
+        background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@startColor), to(@endColor));
+        background-image: -webkit-linear-gradient(top, @startColor, @endColor);
+        background-image: -o-linear-gradient(top, @startColor, @endColor);
+        background-image: linear-gradient(to bottom, @startColor, @endColor);
+        background-repeat: repeat-x;
+        background-clip: border-box;
+//        filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",argb(@startColor),argb(@endColor)));
+//        -ms-filter: e(%("progid:DXImageTransform.Microsoft.gradient( startColorstr='%d', endColorstr='%d',GradientType=0 )",argb(@startColor),argb(@endColor)));
+    }
+    .directional(@startColor: #555, @endColor: #333, @deg: 45deg) {
+        background-color: @endColor;
+        background-repeat: repeat-x;
+        background-image: -moz-linear-gradient(@deg, @startColor, @endColor); // FF 3.6+
+        background-image: -webkit-linear-gradient(@deg, @startColor, @endColor); // Safari 5.1+, Chrome 10+
+        background-image: -o-linear-gradient(@deg, @startColor, @endColor); // Opera 11.10
+//        background-image: linear-gradient(@deg, @startColor, @endColor); // Standard, IE10
+    }
+    .horizontal-three-colors(@startColor: #00b3ee, @midColor: #7a43b6, @colorStop: 50%, @endColor: #c3325f) {
+        background-color: mix(@midColor, @endColor, 80%);
+        background-image: -webkit-gradient(left, linear, 0 0, 0 100%, from(@startColor), color-stop(@colorStop, @midColor), to(@endColor));
+        background-image: -webkit-linear-gradient(left, @startColor, @midColor @colorStop, @endColor);
+        background-image: -moz-linear-gradient(left, @startColor, @midColor @colorStop, @endColor);
+        background-image: -o-linear-gradient(left, @startColor, @midColor @colorStop, @endColor);
+        background-image: linear-gradient(to right, @startColor, @midColor @colorStop, @endColor);
+        background-repeat: no-repeat;
+//        filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",argb(@startColor),argb(@endColor))); // IE9 and down, gets no color-stop at all for proper fallback
+    }
+
+    .vertical-three-colors(@startColor: #00b3ee, @midColor: #7a43b6, @colorStop: 50%, @endColor: #c3325f) {
+        background-color: mix(@midColor, @endColor, 80%);
+        background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@startColor), color-stop(@colorStop, @midColor), to(@endColor));
+        background-image: -webkit-linear-gradient(@startColor, @midColor @colorStop, @endColor);
+        background-image: -moz-linear-gradient(top, @startColor, @midColor @colorStop, @endColor);
+        background-image: -o-linear-gradient(@startColor, @midColor @colorStop, @endColor);
+        background-image: linear-gradient(@startColor, @midColor @colorStop, @endColor);
+        background-repeat: no-repeat;
+//        filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",argb(@startColor),argb(@endColor))); // IE9 and down, gets no color-stop at all for proper fallback
+    }
+    .radial(@innerColor: #555, @outerColor: #333) {
+        background-color: @outerColor;
+        background-image: -webkit-gradient(radial, center center, 0, center center, 460, from(@innerColor), to(@outerColor));
+        background-image: -webkit-radial-gradient(circle, @innerColor, @outerColor);
+        background-image: -moz-radial-gradient(circle, @innerColor, @outerColor);
+        background-image: -o-radial-gradient(circle, @innerColor, @outerColor);
+//        background-repeat: no-repeat;
+    }
+    .striped(@color: #555, @angle: 45deg) {
+        background-color: @color;
+        background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.25, rgba(255,255,255,.15)), color-stop(.25, transparent), color-stop(.5, transparent), color-stop(.5, rgba(255,255,255,.15)), color-stop(.75, rgba(255,255,255,.15)), color-stop(.75, transparent), to(transparent));
+        background-image: -webkit-linear-gradient(@angle, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent);
+        background-image: -moz-linear-gradient(@angle, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent);
+        background-image: -o-linear-gradient(@angle, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent);
+        background-image: linear-gradient(@angle, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent);
+    }
+}
+.title-with-line{
+    display: inline;
+    vertical-align: baseline;
+    position: relative;
+    padding: 0 21px;
+    @media @less600{
+        padding: 0;
+    }
+    &:before, &:after{
+        content: '';
+        display: block;
+        width: 1000px;
+        position: absolute;
+        top: 0.73em;
+        border-top: 1px solid @lineColor;
+        @media @less600{
+            display: none;
+        }
+    }
+    &:before{
+        right: 100%;
+    }
+    &:after{
+        left: 100%;
+    }
+}
+@highdensity:                   ~"only screen and (-webkit-min-device-pixel-ratio: 1.3)",
+                                ~"only screen and    (min--moz-device-pixel-ratio: 1.3)",
+                                ~"only screen and    (-o-min-device-pixel-ratio: 1.3/1)",
+                                ~"only screen and         (min-device-pixel-ratio: 1.3)";
+@less980:                       ~"screen and (max-width: 980px)";
+@more600less980:                ~"screen and (min-width: 600px) and (max-width: 980px)";
+@less600:                       ~"screen and (max-width: 599px)";
+@less479:                       ~"screen and (max-width: 479px)";
+@more479less599:                ~"screen and (min-width: 480px) and (max-width: 599px)";
+@less1200:                      ~"screen and (max-width: 1200px)";
+@less750:                      ~"screen and (max-width: 750px)";
+
+// fix ie font-family
+.regular{
+    .msie &{
+        font-family: source_sans_proregular
+    }
+}
+.extra-light{
+    .msie &{
+        font-family: source_sans_proextralight
+    }
+}
+.semi-bold{
+    .msie &{
+        font-family: source_sans_prosemibold
+    }
+}

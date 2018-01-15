@@ -17,7 +17,7 @@ require_once( 'lib/MessageStorage.class.php' );
  * most mySQL/PHP hosts. Can probably stand to use some improvements
  * in error handling and the way queries are setup.
  */
-class MessageStorageMySqli extends MessageStore
+class MessageStorageMySqli extends MessageStorage
 {    
     const MESSAGE_TABLE = 'messages';
     	
@@ -38,7 +38,7 @@ class MessageStorageMySqli extends MessageStore
      */    
     protected function readMessageFromStorage($msgId)
     {
-			if(!($stmt = $this->mysqli->prepare('SELECT * FROM ' . self::MESSAGE_TABLE . ' WHERE id=?')))
+			if(!($stmt = $this->mysqli->prepare('SELECT version, messagetext, linkhmac FROM ' . self::MESSAGE_TABLE . ' WHERE id=?')))
     		throw new Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error );
 			
 			if(!$stmt->bind_param("i", $msgId))
@@ -47,10 +47,15 @@ class MessageStorageMySqli extends MessageStore
 			if(!$stmt->execute())
 			    throw new Exception("Execute failed: (" . $stmt->errno . ") " . $stmt->error);
 			
-			$res = $stmt->get_result();
-			$row = $res->fetch_assoc();			
+			$version = null;
+			$messageText = null;
+			$hmacLink = null;
+			$stmt->bind_result($version,$messageText,$hmacLink);
 			
-			return $row;
+			if( $stmt->fetch() == false )
+				return null;			
+			
+			return array( 'version' => $version, 'msgText' => $messageText, 'hmacLink' => $hmacLink );
     }
     
     /**
@@ -58,18 +63,43 @@ class MessageStorageMySqli extends MessageStore
      */    
     protected function writeMessageToStorage($encryptedMessage)
     {
-			if(!($stmt = $this->mysqli->prepare('INSERT INTO ' . self::MESSAGE_TABLE . ' VALUES (messagetext) (?)')))
+    	// We save the IP address to prevent abuse of the system (such as flooding)
+    	// this gets deleted when the message is read.
+    	// Is this an appropriate mechanism? Worth discussing.
+    	if( isset($_SERVER["REMOTE_ADDR"]) )
+    		$ip = $_SERVER["REMOTE_ADDR"];
+    	else
+    		$ip = '';
+    	
+			if(!($stmt = $this->mysqli->prepare('INSERT INTO ' . self::MESSAGE_TABLE . ' (version,messagetext,createdon,ipaddress) VALUES (?,?,NOW(),?)')))
     		throw new Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error );
 			
-			if (!$stmt->bind_param("s", $encryptedMessage))
+			$version = self::VERSION;
+			
+			if (!$stmt->bind_param("iss", $version, $encryptedMessage, $ip))
 			    throw new Exception("Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error);
 			
 			if (!$stmt->execute())
 			    throw new Exception("Execute failed: (" . $stmt->errno . ") " . $stmt->error);
 			
 			// return the message identifier
-			return $stmt->insertId;
+			return $stmt->insert_id;
     }
+    
+    /**
+     * {@inheritdoc}
+     */    
+    protected function writeHmacToStorage($msgId, $hmac)
+    {    	
+			if(!($stmt = $this->mysqli->prepare('UPDATE ' . self::MESSAGE_TABLE . ' set linkhmac=?')))
+    		throw new Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error );
+			
+			if (!$stmt->bind_param("s", $hmac))
+			    throw new Exception("Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error);
+			
+			if (!$stmt->execute())
+			    throw new Exception("Execute failed: (" . $stmt->errno . ") " . $stmt->error);			
+    }    
     
     /**
      * {@inheritdoc}
