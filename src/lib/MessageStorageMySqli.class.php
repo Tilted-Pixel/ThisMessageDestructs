@@ -71,19 +71,19 @@ class MessageStorageMySqli extends MessageStorage
     	else
     		$ip = '';
     	
-			if(!($stmt = $this->mysqli->prepare('INSERT INTO ' . self::MESSAGE_TABLE . ' (version,messagetext,createdon,ipaddress) VALUES (?,?,NOW(),?)')))
-    		throw new Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error );
-			
-			$version = self::VERSION;
-			
-			if (!$stmt->bind_param("iss", $version, $encryptedMessage, $ip))
-			    throw new Exception("Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error);
-			
-			if (!$stmt->execute())
-			    throw new Exception("Execute failed: (" . $stmt->errno . ") " . $stmt->error);
-			
-			// return the message identifier
-			return $stmt->insert_id;
+        if(!($stmt = $this->mysqli->prepare('INSERT INTO ' . self::MESSAGE_TABLE . ' (version,messagetext,createdon,ipaddress) VALUES (?,?,NOW(),?)')))
+            throw new Exception("Prepare failed: (" . $stmt->errno . ") " . $stmt->error );
+
+        $version = self::VERSION;
+
+        if (!$stmt->bind_param("iss", $version, $encryptedMessage, $ip))
+            throw new Exception("Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error);
+
+        if (!$stmt->execute())
+            throw new Exception("Execute failed: (" . $stmt->errno . ") " . $stmt->error);
+
+        // return the message identifier
+        return $stmt->insert_id;
     }
     
     /**
@@ -91,14 +91,14 @@ class MessageStorageMySqli extends MessageStorage
      */    
     protected function writeHmacToStorage($msgId, $hmac)
     {    	
-			if(!($stmt = $this->mysqli->prepare('UPDATE ' . self::MESSAGE_TABLE . ' set linkhmac=?')))
-    		throw new Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error );
+        if(!($stmt = $this->mysqli->prepare('UPDATE ' . self::MESSAGE_TABLE . ' set linkhmac=? WHERE id=?')))
+            throw new Exception("Prepare failed: (" . $stmt->errno . ") " . $stmt->error );
+
+        if (!$stmt->bind_param("si", $hmac,$msgId))
+            throw new Exception("Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error);
 			
-			if (!$stmt->bind_param("s", $hmac))
-			    throw new Exception("Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error);
-			
-			if (!$stmt->execute())
-			    throw new Exception("Execute failed: (" . $stmt->errno . ") " . $stmt->error);			
+        if (!$stmt->execute())
+            throw new Exception("Execute failed: (" . $stmt->errno . ") " . $stmt->error);
     }    
     
     /**
@@ -106,13 +106,30 @@ class MessageStorageMySqli extends MessageStorage
      */    
     protected function deleteMessageFromStorage($msgId)
     {
-			if(!($stmt = $this->mysqli->prepare('DELETE FROM ' . self::MESSAGE_TABLE . ' WHERE id=?')))
-    		throw new Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error );
-			
-			if (!$stmt->bind_param("i", $msgId))
-			    throw new Exception("Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error);
-			
-			if (!$stmt->execute())
-			    throw new Exception("Execute failed: (" . $stmt->errno . ") " . $stmt->error);    	
+        if(!($stmt = $this->mysqli->prepare('DELETE FROM ' . self::MESSAGE_TABLE . ' WHERE id=?')))
+            throw new Exception("Prepare failed: (" . $stmt->errno . ") " . $stmt->error );
+
+        if (!$stmt->bind_param("i", $msgId))
+            throw new Exception("Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error);
+
+        if (!$stmt->execute())
+            throw new Exception("Execute failed: (" . $stmt->errno . ") " . $stmt->error);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function deleteExpiredMessages(DateTime $olderThan)
+    {
+        if(!($stmt = $this->mysqli->prepare('DELETE FROM ' . self::MESSAGE_TABLE . ' WHERE createdon < ?')))
+            throw new Exception("Prepare failed: (" . $stmt->errno . ") " . $stmt->error );
+
+        $dateStr = $olderThan->format('Y-m-d');
+
+        if (!$stmt->bind_param("s", $dateStr ) )
+            throw new Exception("Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error);
+
+        if (!$stmt->execute())
+            throw new Exception("Execute failed: (" . $stmt->errno . ") " . $stmt->error);
     }
 }

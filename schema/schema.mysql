@@ -1,0 +1,35 @@
+--
+-- Table structure for table `history`
+--
+
+CREATE TABLE `history` (
+  `messageid` int(11) NOT NULL,
+  `storedon` datetime DEFAULT NULL,
+  `retrievedon` datetime DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE `messages` (
+  `id` int(11) NOT NULL,
+  `version` int(11) NOT NULL,
+  `ipaddress` varchar(255) NOT NULL,
+  `messagetext` text NOT NULL,
+  `linkhmac` varchar(64) NOT NULL,
+  `createdon` datetime NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+--
+-- Indexes for table `history`
+--
+ALTER TABLE `history`
+  ADD PRIMARY KEY (`messageid`);
+
+--
+-- Indexes for table `messages`
+--
+ALTER TABLE `messages`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `messages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2711;

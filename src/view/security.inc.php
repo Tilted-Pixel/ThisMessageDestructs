@@ -12,7 +12,7 @@
             	<h1>Downloading the Source Code</h1>
             	<p>The source code for the website (minus our own specific HTML theme) is open sourced under the GPLv3 license. Grab it from our GitHub repository:</p>
             	
-            	<p><strong>August 6, 2013: repo link is coming very soon! We are just setting it up.</strong></p>
+                <p><a href="https://github.com/Tilted-Pixel/ThisMessageDestructs">https://github.com/Tilted-Pixel/ThisMessageDestructs</a></p>
             	
             	<h1>Why this Service Exists</h1>
             	

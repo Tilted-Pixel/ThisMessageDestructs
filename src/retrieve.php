@@ -15,42 +15,54 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-	// include preprocessing that should happen with every file
-	require_once( 'control/preprocess.inc.php' );
-	require_once( 'lib/MessageStorageMySqli.class.php' );
-	
-	
-	// if there is no msg set or it's not the expected length, or not a hexadecimal string
-	// or the msgId part is not integer then we should be redirecting back to the index
-	if( !isset($_GET['msg']) 
-		|| !is_string($_GET['msg'])
-		)
-	{
-		header("HTTP/1.1 301 Moved Permanently");
-		header("Location: https://" . $_SERVER["SERVER_NAME"] . '/');
-		exit();	
-	}
+    // include preprocessing that should happen with every file
+    require_once( 'control/preprocess.inc.php' );
+    require_once( 'lib/MessageStorageMySqli.class.php' );
 
-	
-	$mysqli = new mysqli($Config['db_host'], $Config['db_user'], $Config['db_pass'], $Config['db_db']);
-  
-  if ($mysqli->connect_errno) {
+
+    // if there is no msg set or it's not the expected length, or not a hexadecimal string
+    // or the msgId part is not integer then we should be redirecting back to the index
+    if( !isset($_GET['msg'])
+        || !is_string($_GET['msg'])
+        )
+    {
+        header("HTTP/1.1 301 Moved Permanently");
+        header("Location: https://" . $_SERVER["SERVER_NAME"] . '/');
+        exit();
+    }
+
+
+    $mysqli = new mysqli($Config['db_host'], $Config['db_user'], $Config['db_pass'], $Config['db_db']);
+
+    if ($mysqli->connect_errno) {
       throw new Exception( "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error );
-  }
-	
-	$messageStorage = new MessageStorageMySqli($mysqli);    
-  $result = $messageStorage->readMessage($_GET['msg'],$Config['sharedkey'],$Config['iv'],$Config['linkhmackey']);
-  
-  $TemplateVars = array();
-  
-  if( !is_null($result) )
-  {
-  	$TemplateVars['foundMsg'] = true;
-  	$TemplateVars['msgText']  = $result;
-  }
-  else
-  	$TemplateVars['foundMsg'] = false;  
-	
+    }
+
+    $messageStorage = new MessageStorageMySqli($mysqli);
+
+    $TemplateVars = [];
+    $TemplateVars['retrieved'] = false;
+
+    if( !empty($_POST['read']) ) {
+
+        $TemplateVars['retrieved'] = true;
+
+        $result = $messageStorage->readMessage(
+            $_GET['msg'],
+            $Config['sharedkey'],
+            $Config['iv'],
+            $Config['linkhmackey']
+        );
+
+        if( !is_null($result) )
+        {
+            $TemplateVars['foundMsg'] = true;
+            $TemplateVars['msgText']  = $result;
+        }
+        else
+            $TemplateVars['foundMsg'] = false;
+    }
+
 	$TemplateVars['pageTitle'] = 'This Message Will Self Destruct';
 	
 	// include the header
@@ -64,4 +76,3 @@
 	
 	// include the footer
 	require_once( 'view/footer.inc.php' );
-?>

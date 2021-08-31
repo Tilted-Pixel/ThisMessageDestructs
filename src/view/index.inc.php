@@ -3,7 +3,7 @@
 
 				
 			<?php
-				if( $TemplateVars['linkCreated'] )
+				if( !empty($TemplateVars['linkCreated']) )
 				{
 					echo '<h1 style="font-weight:bold">Congratulations, your self-destructing message is ready!</h1>';
 					echo '<p>Your link is ready in the box below. Simply copy-paste it into e-mail, instant messenger, or even strap it to a carrier pigeon!</p>';
@@ -13,7 +13,6 @@
 				else
 				{
 					 echo '<h1 style="font-weight:bold">Create Messages that Destruct Upon Reading</h1>';
-    			echo '<h2>A better alternative to pasting sensitive information into e-mail.</h2>';
 				}
 			?>
 			
@@ -24,17 +23,11 @@
 				<?php else: ?>
 				<h2 style="font-weight:bold">Enter the self-destructing text you wish to share...</h2>
 				<?php endif; ?>
-				
-				<p>You will receive a link to your text that can be viewed only once.</p>
+
 				<label for="msg" style="font-weight:bold">Your Message</label><br />
-				<textarea name="msg" id="msg" maxlength="50000" style="width:500px; height:100px"></textarea>			
-				<br />
-				<input type="checkbox" name="tos" id="tos" value="">&nbsp;<label for="tos">I certify that I have read the <a href="/termsofservice.php" target="_blank">Terms of Service</a> and that I am using this service at my own risk.</label> 
-				<br />
-				<input type="submit" value="CREATE MY MESSAGE LINK" />				
-				
-				<br />
-				<p>This service is currently in <strong>beta</strong>. Functionality may change or break. We welcome your feedback!</p>
+				<textarea name="msg" id="msg" maxlength="50000" style="width:500px; height:100px"></textarea>
+				<br /><br />
+				<input type="submit" value="CREATE MY MESSAGE LINK" />
 			</form>		
     </article>
 </section>

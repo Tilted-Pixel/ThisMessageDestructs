@@ -25,7 +25,7 @@
 	// make sure the msg exists and is of acceptable length
 	if( isset($_POST['msg']) && is_string($_POST['msg']) )
 	{					
-		
+
 		$mysqli = new mysqli($Config['db_host'], $Config['db_user'], $Config['db_pass'], $Config['db_db']);
 		
 		if ($mysqli->connect_errno) {
@@ -48,5 +48,4 @@
 	require_once( 'view/index.inc.php' );
 	
 	// include the footer
-	require_once( 'view/footer.inc.php' );    
-?>
+	require_once( 'view/footer.inc.php' );

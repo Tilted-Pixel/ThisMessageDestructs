@@ -38,16 +38,16 @@ abstract class MessageStorage
      */
     public function storeMessage($msgText,$sharedKey,$iv,$hmacKey)
     {
-    	  $encryptionKey = $this->generateEncryptionKey();
-    	  $encryptedMessage = $this->encryptMessage($msgText, $encryptionKey,$iv);
+        $encryptionKey = $this->generateEncryptionKey();
+        $encryptedMessage = $this->encryptMessage($msgText, $encryptionKey,$iv);
         $msgId = $this->writeMessageToStorage( bin2hex($encryptedMessage) );
                 
         $link = sprintf( '%02d', self::VERSION ) . $encryptionKey . $msgId;
         
         $encryptedLink = $this->encryptMessage($link, $sharedKey, $iv);
-          
+
         // now that we have an encrypted link we can generate an hmac and store it too
-        $hmac = hash_hmac("sha256",$encryptedLink,$hmacKey);               
+        $hmac = hash_hmac("sha256",bin2hex($encryptedLink),$hmacKey);
         $this->writeHmacToStorage($msgId, $hmac);
                 
         return bin2hex($encryptedLink);
@@ -63,14 +63,14 @@ abstract class MessageStorage
      *
      * @return string|null Returns the message or null if not found.
      */    
-    public function readMessage($msgStr,$sharedKey,$iv,$hmacKey)
+    public function readMessage($encryptedLink,$sharedKey,$iv,$hmacKey)
     {
     	// first validate that msgStr is a valid hex string (hex chars and even length)    	
-    	if( (ctype_xdigit($msgStr) == false) || strlen($msgStr)%2 )
+    	if( (ctype_xdigit($encryptedLink) == false) || strlen($encryptedLink)%2 )
     		return null;
     	
     	// first decrypt the message string
-    	$decryptedMsgStr = $this->decryptMessage( hex2bin($msgStr), $sharedKey, $iv );
+    	$decryptedMsgStr = $this->decryptMessage( hex2bin($encryptedLink), $sharedKey, $iv );
     	    	    		
     	// first 2 characters are ALWAYS the version number
     	$version = substr($decryptedMsgStr,0,2);
@@ -107,19 +107,19 @@ abstract class MessageStorage
     		),    		
     	);
 
-			// next 16 characters are the encryption key
-			$encryptionKey = substr($decryptedMsgStr,$dataLocations[$version]['encryptionKey'][0],$dataLocations[$version]['encryptionKey'][1]);						
-			
-			// msgId is everything else in the string
-			$msgId = trim(substr($decryptedMsgStr, $dataLocations[$version]['msgId'][0]));			
-						
-			// here we perform an extra validation check, since msgId should be only digits
-			if( !is_int($msgId) && !ctype_digit($msgId) )
-				return null;					
+        // next 16 characters are the encryption key
+        $encryptionKey = substr($decryptedMsgStr,$dataLocations[$version]['encryptionKey'][0],$dataLocations[$version]['encryptionKey'][1]);
+
+        // msgId is everything else in the string
+        $msgId = trim(substr($decryptedMsgStr, $dataLocations[$version]['msgId'][0]));
+
+        // here we perform an extra validation check, since msgId should be only digits
+        if( !is_int($msgId) && !ctype_digit($msgId) )
+            return null;
     	
     	// attempt to read the (encrypted) message from storage. 
     	$encryptedMsg = $this->readMessageFromStorage($msgId);    	    	
-    	
+
     	if( is_null($encryptedMsg) )
     		return null;
     	
@@ -127,11 +127,11 @@ abstract class MessageStorage
     	// the one in the database. If they don't match, someone has tampered with the link, meaning
     	// this is not the rightful owner of the message! Chances are someone has guessed a string
     	// that maps a correct msgId and is trying to grief the system by deleting random messages.
-    	if( $encryptMsg['version'] >= 2 )
+    	if( $encryptedMsg['version'] >= 2 )
     	{
-	    	$hmac = hash_hmac("sha256",$msgStr,$hmacKey);    		
-	    	
-	    	if( strcasecmp($hmac, $encryptedMsg['hmacLink']) )
+	    	$hmac = hash_hmac("sha256",$encryptedLink,$hmacKey);
+
+            if( strcasecmp($hmac, $encryptedMsg['hmacLink']) )
 	    		return null;
 	    }
     		
@@ -155,8 +155,8 @@ abstract class MessageStorage
      * @return binary Returns the binary encrypted message.
      */
     protected function encryptMessage($msgText, $encryptionKey, $iv)
-    {    	
-    	return mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $encryptionKey, $msgText, MCRYPT_MODE_CBC , $iv);
+    {
+        return openssl_encrypt($msgText, 'aes-128-cbc', $encryptionKey, false, $iv);
     }       		
 
     /**
@@ -166,11 +166,11 @@ abstract class MessageStorage
      * @param binary $encryptionKey The encryption key to use to decrypt the message.
      * @param binary $iv The iv used to encrypt the message
      *
-     * @return array|null Associative array with 'msgId' (identifier of message) and 'encryptionKey' (encryption key used)
+     * @return string The decrypted message
      */
     protected function decryptMessage($msgTextEncrypted, $encryptionKey, $iv)
     {
-    	  return mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $encryptionKey, $msgTextEncrypted, MCRYPT_MODE_CBC , $iv);
+        return openssl_decrypt($msgTextEncrypted, 'aes-128-cbc', $encryptionKey, false, $iv);
     }    
     
     /**
@@ -217,4 +217,14 @@ abstract class MessageStorage
      * @param string $msgId The identifier of the message to be read.     
      */    
     abstract protected function deleteMessageFromStorage($msgId);
+
+
+    /**
+     * Deletes all messages that were created before $olderThan
+     *
+     * @param DateTime $olderThan
+     *
+     * @return void
+     */
+    abstract public function deleteExpiredMessages(DateTime $olderThan);
 }
