@@ -4,8 +4,8 @@
 if (substr(php_sapi_name(), 0, 3) != 'cli')
     return;
 
-require_once( 'config/config.inc.php' );
-require_once( 'lib/MessageStorageMySqli.class.php' );
+require_once( './config/config.inc.php' );
+require_once( './lib/MessageStorageMySqli.class.php' );
 
 $mysqli = new mysqli($Config['db_host'], $Config['db_user'], $Config['db_pass'], $Config['db_db']);
 
